@@ -11,6 +11,7 @@ class MotionDetection:
         self.__image0 = None
         self.__image1 = None
         self.__image2 = None
+        self._count = 0
 
         # Configurations
         # Change these to adjust sensitive of motion
@@ -49,11 +50,16 @@ class MotionDetection:
             return True
         return False
 
-    def saveImage(self, file_name, camera):
+    def saveImage(self, camera):
+        tstmp = datetime.datetime.now().strftime("%Y-%m-%d-%H%M%S")
+        image_file  = "/opt/camera/capture_%s_%05d.jpg" % (tstmp, self._count)
         camera.resolution = (1920,1080)
-        camera.capture(file_name, format='jpeg', quality = 20)
-        print "  - Image saved:", file_name
+        camera.capture(image_file, format='jpeg', quality = 20)
+        print "  - Image saved:", image_file
         camera.resolution = (100,100)
+        thumb_image_file  = "/opt/camera/thumb_%s_%05d.jpg" % (tstmp, self._count)
+        cv2.imwrite(thumb_image_file, self.__image0)
+        self._count += 1
 
 def process():
     print "Initializing camera..."
@@ -79,10 +85,7 @@ def process():
             image = cv2.imdecode(data, 1)
             if detection.detectMotion(image):
                 print "Motion detected"
-                tstmp = datetime.datetime.now().strftime("%Y-%m-%d-%H%M%S")
-                image_file  = "/opt/camera/capture_%s_%05d.jpg" % (tstmp, count)
-                count += 1
-                detection.saveImage(image_file, camera)
+                detection.saveImage(camera)
 
             time.sleep(0.2)
 
