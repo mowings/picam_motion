@@ -15,7 +15,7 @@ class MotionDetection:
 
         # Configurations
         # Change these to adjust sensitive of motion
-        self._MOTION_LEVEL = 100
+        self._MOTION_LEVEL = 500
         self._THRESHOLD = 35
 
     def _updateImage(self, image):
@@ -53,10 +53,10 @@ class MotionDetection:
     def saveImage(self, camera):
         tstmp = datetime.datetime.now().strftime("%Y-%m-%d-%H%M%S")
         image_file  = "/opt/camera/capture_%s_%05d.jpg" % (tstmp, self._count)
-        camera.resolution = (1920,1080)
+        camera.resolution = (1400,1400)
         camera.capture(image_file, format='jpeg', quality = 20)
         print "  - Image saved:", image_file
-        camera.resolution = (100,100)
+        camera.resolution = (150,150)
         thumb_image_file  = "/opt/camera/thumb_%s_%05d.jpg" % (tstmp, self._count)
         cv2.imwrite(thumb_image_file, self.__image0)
         self._count += 1
@@ -65,7 +65,7 @@ def process():
     print "Initializing camera..."
     with picamera.PiCamera() as camera:
         camera.rotation = 270
-        camera.resolution = (100,100)
+        camera.resolution = (150,150)
         print "Setting focus and light level on camera..."
         time.sleep(2)
 
