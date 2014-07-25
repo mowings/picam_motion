@@ -16,7 +16,7 @@ class MotionDetection:
 
         # Configurations
         # Change these to adjust sensitive of motion
-        self._MOTION_LEVEL = 540
+        self._MOTION_LEVEL = 2000
         self._THRESHOLD = 35
 
     def _updateImage(self, image):
@@ -54,7 +54,7 @@ class MotionDetection:
     def saveImage(self, camera):
         tstmp = datetime.datetime.now().strftime("%Y-%m-%d-%H%M%S")
         image_file  = "/opt/camera/motion/capture_%s_%05d.jpg" % (tstmp, self._count)
-        camera.resolution = (2592, 1944)
+        camera.resolution = (1944, 1944)
         camera.capture(image_file, format='jpeg', use_video_port = False, quality = 100)
         print "  - Image saved:", image_file
         camera.resolution = (150,150)
@@ -67,9 +67,9 @@ def process():
     with picamera.PiCamera() as camera:
         camera.rotation = 270
         camera.resolution = (150,150)
-        camera.exposure_mode = 'night'
-        camera.awb_mode = 'cloudy'
-        camera.brightness = 60
+        camera.exposure_mode = 'auto'
+        camera.awb_mode = 'auto'
+        camera.brightness = 50
         print "Setting focus and light level on camera..."
         time.sleep(2)
 
@@ -90,8 +90,6 @@ def process():
             if detection.detectMotion(image):
                 print "Motion detected"
                 detection.saveImage(camera)
-
-            time.sleep(0.2)
 
 if __name__ == "__main__":
     process()
