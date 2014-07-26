@@ -39,9 +39,6 @@ class MotionDetector:
         self._new_image(image)
         total = self._get_motion()
         if total and total > self._change_threshold:
-            print "Sum:", self.total
-            print "Mean:", self.mean
-            print "Std. Dev:", self.stddev
             return True
         else:
             return False
